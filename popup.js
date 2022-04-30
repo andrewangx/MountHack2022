@@ -1,141 +1,120 @@
-const listsContainer = document.querySelector('[data-lists]')
-const newListForm = document.querySelector('[data-new-list-form]')
-const newListInput = document.querySelector('[data-new-list-input]')
-const deleteListButton = document.querySelector('[data-delete-list-button]')
-const listDisplayContainer = document.querySelector('[data-list-display-container]')
-const listTitleElement = document.querySelector('[data-list-title]')
-const listCountElement = document.querySelector('[data-list-count]')
-const tasksContainer = document.querySelector('[data-tasks]')
-const taskTemplate = document.getElementById('task-template')
-const newTaskForm = document.querySelector('[data-new-task-form]')
-const newTaskInput = document.querySelector('[data-new-task-input]')
-const clearCompleteTasksButton = document.querySelector('[data-clear-complete-tasks-button]')
+$(function () {
+    var tasksList = new Array();
+    var learnList = new Array();
+    chrome.storage.sync.get(['list1'], function (val) {
+        if (val.list1.length > 0)
+            tasksList = val.list1;
+        console.log("val.list1 :" + val.list1);
+        //displaying the old items
+        for (var i = 0; i < tasksList.length; i++) {
+            addListItem(tasksList[i]);
+        }
 
-const LOCAL_STORAGE_LIST_KEY = 'task.lists'
-const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
-let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
-let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY)
 
-listsContainer.addEventListener('click', e => {
-  if (e.target.tagName.toLowerCase() === 'li') {
-    selectedListId = e.target.dataset.listId
-    saveAndRender()
-  }
-})
+    })
 
-tasksContainer.addEventListener('click', e => {
-  if (e.target.tagName.toLowerCase() === 'input') {
-    const selectedList = lists.find(list => list.id === selectedListId)
-    const selectedTask = selectedList.tasks.find(task => task.id === e.target.id)
-    selectedTask.complete = e.target.checked
-    save()
-    renderTaskCount(selectedList)
-  }
-})
 
-clearCompleteTasksButton.addEventListener('click', e => {
-  const selectedList = lists.find(list => list.id === selectedListId)
-  selectedList.tasks = selectedList.tasks.filter(task => !task.complete)
-  saveAndRender()
-})
+    $('#addButtonTask').click(function () {
 
-deleteListButton.addEventListener('click', e => {
-  lists = lists.filter(list => list.id !== selectedListId)
-  selectedListId = null
-  saveAndRender()
-})
+        var newTask = $('#taskInput').val();
+        //adding the new item to tasklist array
+        tasksList.push(newTask);
+        console.log("tasksList under click :" + tasksList);
+        addListItem(newTask);
+        //adding the new list back to chrome storage
+        chrome.storage.sync.set({
+            'list1': tasksList
+        })
 
-newListForm.addEventListener('submit', e => {
-  e.preventDefault()
-  const listName = newListInput.value
-  if (listName == null || listName === '') return
-  const list = createList(listName)
-  newListInput.value = null
-  lists.push(list)
-  saveAndRender()
-})
 
-newTaskForm.addEventListener('submit', e => {
-  e.preventDefault()
-  const taskName = newTaskInput.value
-  if (taskName == null || taskName === '') return
-  const task = createTask(taskName)
-  newTaskInput.value = null
-  const selectedList = lists.find(list => list.id === selectedListId)
-  selectedList.tasks.push(task)
-  saveAndRender()
-})
+    });
 
-function createList(name) {
-  return { id: Date.now().toString(), name: name, tasks: [] }
-}
 
-function createTask(name) {
-  return { id: Date.now().toString(), name: name, complete: false }
-}
 
-function saveAndRender() {
-  save()
-  render()
-}
+    function addListItem(value) {
+        console.log("addListItem");
+        document.getElementById("taskInput").value = "";
+        var ul = document.getElementById("todo-listUl");
 
-function save() {
-  localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists))
-  localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId)
-}
-
-function render() {
-  clearElement(listsContainer)
-  renderLists()
-
-  const selectedList = lists.find(list => list.id === selectedListId)
-  if (selectedListId == null) {
-    listDisplayContainer.style.display = 'none'
-  } else {
-    listDisplayContainer.style.display = ''
-    listTitleElement.innerText = selectedList.name
-    renderTaskCount(selectedList)
-    clearElement(tasksContainer)
-    renderTasks(selectedList)
-  }
-}
-
-function renderTasks(selectedList) {
-  selectedList.tasks.forEach(task => {
-    const taskElement = document.importNode(taskTemplate.content, true)
-    const checkbox = taskElement.querySelector('input')
-    checkbox.id = task.id
-    checkbox.checked = task.complete
-    const label = taskElement.querySelector('label')
-    label.htmlFor = task.id
-    label.append(task.name)
-    tasksContainer.appendChild(taskElement)
-  })
-}
-
-function renderTaskCount(selectedList) {
-  const incompleteTaskCount = selectedList.tasks.filter(task => !task.complete).length
-  const taskString = incompleteTaskCount === 1 ? "task" : "tasks"
-  listCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`
-}
-
-function renderLists() {
-  lists.forEach(list => {
-    const listElement = document.createElement('li')
-    listElement.dataset.listId = list.id
-    listElement.classList.add("list-name")
-    listElement.innerText = list.name
-    if (list.id === selectedListId) {
-      listElement.classList.add('active-list')
+        addUI(ul, value, 1)
     }
-    listsContainer.appendChild(listElement)
-  })
-}
 
-function clearElement(element) {
-  while (element.firstChild) {
-    element.removeChild(element.firstChild)
-  }
-}
 
-render()
+
+    function addUI(ul, value) {
+        var li = document.createElement("li");
+        $("li").addClass("list-group-item");
+        var text = document.createTextNode(value);
+        li.appendChild(text);
+
+        if (value === '') {
+            //do nothing
+            //alert("You must write something!");
+        } else {
+            
+            var span = document.createElement("SPAN");
+            // var txt = document.createTextNode("\u00D7");
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.name = "name";
+            checkbox.checked = 0;
+            checkbox.id = "id";
+    
+                span.className = "check1";
+                // span.appendChild(checkbox);
+                li.appendChild(checkbox);
+                li.appendChild(span);
+    
+                // $(".check1").click(function () {
+                //     var index = $(this).index(".check1");
+                //     console.log(index);
+                //     var div = this.parentElement;
+                //     div.style.setProperty("text-decoration","line-through")
+                    
+                // })
+                $("li").on("click", "li", function(){
+                    $(this).wrap("<strike>");
+                });
+                ul.appendChild(li);
+        }
+
+        }
+
+        $('#addButtonTask').click(function () {
+            
+    
+        });
+        // for remove finished button
+                    // div.style.display = "none";
+                    // removeItem(index);
+                    // $(".check1").eq(index).remove();
+
+        function removeItem(itemIndex) {
+            console.log("removeitem");
+            chrome.storage.sync.get(['list1'], function (val) {
+                tasksList = val.list1;
+                tasksList.splice(itemIndex, 1);
+                console.log("new list", tasksList);
+
+                chrome.storage.sync.set({
+                    'list1': tasksList
+                })
+
+            })
+
+        }
+
+
+        function setDate() {
+            var todayDate = new Date();
+            console.log(todayDate);
+            var locale = "en-us";
+            var month = todayDate.toLocaleString(locale, {month: "long"});
+            var day = todayDate.toLocaleString(locale, {weekday: "long"});
+
+            document.getElementById('date').innerHTML = "Task checklist for " + day + ", " + todayDate.getDate() + " "
+                + month;
+        }
+    }
+
+)

@@ -7,14 +7,26 @@
     <title>Todo list</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700,900&display=swap" />
     <link rel="stylesheet" href="css/main.css" />
+    <script src="jquery-3.6.0.slim.min.js"></script>
+    <script src="popup.js"></script>
     <script type="text/javascript" src="progress.js" defer></script>
   </head>
 
   <body>
     <h1 class="title">To Do List</h1>
 
-
-    <div class="todo-list" data-list-display-container>
+    <div class="row">
+        <div id="todo-section">
+            <ul id="todo-listUl" class="list-group"></ul>
+    
+            <div id="addTaskDiv" >
+                <input type="text" id="taskInput" placeholder=" ">
+                <input type="submit" id="addButtonTask" value="Add Task">
+                <input type="submit" id="removeDoneTask" value="Remove Done">
+                <input type="submit" id="removeAllTask" value="Remove All">
+            </div>
+    
+    <!-- <div class="todo-list" data-list-display-container>
 
       <div>
         
@@ -43,40 +55,19 @@
                   aria-label="new task name"
                 />
                 <button class="btn create" aria-label="create new task">+</button>
-              </form>
-        </div>
+              </form> -->
 
-        <div class="delete-stuff">
-          <button class="btn delete" data-clear-complete-tasks-button>Clear completed tasks</button>
-          <button class="btn delete" data-delete-list-button>Delete list</button>
-        </div>
-      </div>
-    </div>
+   
 
-    <div class="all-tasks">
-        <h2 class="task-list-title">My lists</h2>
-        <ul class="task-list" data-lists></ul>
-  
-        <form action="" data-new-list-form>
-          <input 
-            type="text"
-            class="new list"
-            data-new-list-input
-            placeholder="new list name"
-            aria-label="new list name"
-          />
-          <button class="btn create" aria-label="create new list">+</button>
-        </form>
-      </div>    
-    </div>
-    <template id="task-template">
-      <div class="task">
-        <input type="checkbox" />
-        <label>
-          <span class="custom-checkbox"></span>
-        </label>
-      </div>
-    </template>
 
-  </body>
+
+    <!-- <div class="container-fluid">    </div> -->
+
+
+    
+</div>
+
+
+
+</body>
 </html>
