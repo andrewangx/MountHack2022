@@ -2,8 +2,23 @@
     "manifest_version": 3,
   
     "name": "MountainHack",
-    "description": "get your goals",
+    "description": "Keep track of your tasks and help complete your goals! ",
     "version": "1.0.0",
+    "icons":{
+      "16": "/image/16px - Extension Logo.png",
+      "48": "/image/48px - Extension Logo.png",
+      "128": "/image/128px - Extension Logo.png"
+    },
+    "page_action":{
+      "default_icon":{
+        "16": "/image/16px - Extension Logo.png",
+        "48": "/image/48px - Extension Logo.png",
+        "128": "/image/128px - Extension Logo.png"
+      }
+    },
+    "browser_action": {
+      "default_popup": "popup.html"
+    },
     "permissions": ["activeTab", "storage"],
     "action": {
         "default_popup": "popup.html"
