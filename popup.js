@@ -89,12 +89,19 @@ $(function () {
         $('#removeDoneTask').click(function () {
             if (!($.isEmptyObject(checkedList)) ){
                 for (let k in checkedList){
-                    if(checkedList[k]){
+                    let item = checkedList[k] 
+                    // if(checkedList[k]){
                         var div = this.parentElement;
-                        div.style.display = "none";
+                        // div.style.display = "none";
                         removeItem(k);
-                        $(".check1").eq(k).remove();
-                    }
+                        let checkBox = $(".check1").eq(k).children("input");
+                            console.log(checkBox.get(0));
+                            console.log(checkBox.prop("checked"));
+                            if(checkBox.prop("checked")){
+                                let listItem = checkBox.parent().parent();
+                                listItem.remove();
+                            }
+                    console.log(k);
                 }
             }
         });
@@ -107,7 +114,9 @@ $(function () {
             console.log("removeitem");
             chrome.storage.sync.get(['list1'], function (val) {
                 tasksList = val.list1;
-                tasksList.splice(itemIndex, 1);
+                // tasksList.splice(itemIndex, 1);
+                // tasksList.remove(itemIndex);
+                console.log(itemIndex);
                 console.log("new list", tasksList);
 
                 chrome.storage.sync.set({
@@ -132,3 +141,26 @@ $(function () {
     }
 
 )
+
+
+
+function countItems(){
+
+    for (let k in checkedList){
+        let item = checkedList[k] 
+        // if(checkedList[k]){
+            var div = this.parentElement;
+            // div.style.display = "none";
+            removeItem(k);
+            let checkBox = $(".check1").eq(k).children("input");
+                console.log(checkBox.get(0));
+                console.log(checkBox.prop("checked"));
+                if(checkBox.prop("checked")){
+                    let listItem = checkBox.parent().parent();
+                    listItem.remove();
+                }
+        
+
+        console.log(k);
+    }
+}
