@@ -7,7 +7,7 @@
     <title>Todo list</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700,900&display=swap" />
     <link rel="stylesheet" href="css/main.css" />
-    <script type="text/javascript" src="content.js"></script>
+    <script type="text/javascript" src="progress.js" defer></script>
   </head>
 
   <body>
@@ -77,20 +77,6 @@
         </label>
       </div>
     </template>
-
-
-    <script>
-      function updateProgressBar(progressBar, value){
-        value = Math.round(value);
-        progressBar.querySelector(".progress-fil").style.width = `${value}%`;
-        progressBar.querySelector(".progress-text").textContent = `${value}%`;
-      }
-      
-      const myProgressBar = document.querySelector(".progress");
-
-      updateProgressBar(myProgressBar, 72);   //how to update progressbar example number 
-
-    </script>
 
   </body>
 </html>
