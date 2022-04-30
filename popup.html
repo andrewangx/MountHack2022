@@ -2,23 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Todo list</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700,900&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,700,900&display=swap" />
     <link rel="stylesheet" href="css/main.css" />
     <script type="text/javascript" src="content.js"></script>
   </head>
 
   <body>
-    <h1 class="title">Name</h1>
-
+    <h1 class="title">To Do List</h1>
 
 
     <div class="todo-list" data-list-display-container>
+
+      <div>
+        
+      </div>
+
+      <div class="progress">
+        <div class="progress-fill"></div>
+        <span class="progress-text">0%</span>
+      </div>
+
       <div class="todo-header">
         <h2 class="list-title" data-list-title>YouTube</h2>
         <p class="task-count" data-list-count>3 tasks remaining</p>
@@ -71,5 +77,20 @@
         </label>
       </div>
     </template>
+
+
+    <script>
+      function updateProgressBar(progressBar, value){
+        value = Math.round(value);
+        progressBar.querySelector(".progress-fil").style.width = `${value}%`;
+        progressBar.querySelector(".progress-text").textContent = `${value}%`;
+      }
+      
+      const myProgressBar = document.querySelector(".progress");
+
+      updateProgressBar(myProgressBar, 72);   //how to update progressbar example number 
+
+    </script>
+
   </body>
 </html>
