@@ -1,3 +1,18 @@
+/* .running-man{
+
+} */
+
+
+.mountain{
+    position: relative;
+    left: calc(210px - 72px );
+}
+
+.mountain-flag{
+    position: relative;
+    left: calc(210px - 72px );
+}
+
 .progress {
     position: relative;
     width: 210px;
