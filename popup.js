@@ -1,11 +1,12 @@
 $(function () {
+    // chrome.storage.sync.set({
+    //                     'list': []
+    //                 })
     var tasksList = new Array();
     var checkedList = {};
-    chrome.storage.sync.get(['list1'], function (val) {
-        if (val.list1.length > 0)
-            tasksList = val.list1;
-        console.log("val.list1 :" + val.list1);
-        //displaying the old items
+    chrome.storage.sync.get(['list'], function (val) {
+        if (val.list.length > 0)
+            tasksList = val.list;
         for (var i = 0; i < tasksList.length; i++) {
             addListItem(tasksList[i]);
         }
@@ -15,120 +16,112 @@ $(function () {
 
     $('#addButtonTask').click(function () {
 
-        var newTask = $('#taskInput').val();
+        var newTask = {text:$('#taskInput').val(), checked: false};
+        console.log(newTask)
         //adding the new item to tasklist array
         tasksList.push(newTask);
-        console.log("tasksList under click :" + tasksList);
+        chrome.storage.sync.set({
+            'list': tasksList
+        })
+        console.log(tasksList);
         addListItem(newTask);
         //adding the new list back to chrome storage
-        chrome.storage.sync.set({
-            'list1': tasksList
-        })
-
-
+        
     });
 
 
 
-    function addListItem(value) {
-        console.log("addListItem");
+    function addListItem(task) {
         document.getElementById("taskInput").value = "";
         var ul = document.getElementById("todo-listUl");
 
-        addUI(ul, value)
+        addUI(ul, task)
     }
 
 
 
-    function addUI(ul, value) {
-        var li = document.createElement("li");
-        $("li").addClass("list-group-item");
-        var text = document.createTextNode(value);
-        li.appendChild(text);
-
-        if (value === '') {
+    function addUI(ul, task) {
+        if (task === '') {
             //do nothing
             //alert("You must write something!");
         } else {
-            
-            var span = document.createElement("SPAN");
-            span.className = "check1";
+            var li = document.createElement("li");
+            $("li").addClass("taskitem");
+            var text = document.createTextNode(task.text);
+            li.appendChild(text);
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
-            checkbox.name = "name";
-            checkbox.yes = false;
-            checkbox.checked = false;
-            checkbox.id = "id";
-    
-            span.appendChild(checkbox);
-            // li.appendChild(checkbox);
-            li.appendChild(span);
-            $(".check1").unbind().click(function () {
-                var index = $(this).index(".check1");
-                
-                $(this).find(':checkbox').prop('yes', !($(this).find(':checkbox').prop('yes')) );
-                if($(this).find(':checkbox').prop('yes')){
-                    checkedList[index] = true;
-                } else{
-                    checkedList[index] = false;
-                }
-                // console.log(checkedList);
-
-            })
+            $("input[type='checkbox']").addClass("taskcheckbox")
+            task.checked = checkbox.checked;
+            li.appendChild(checkbox);
             ul.appendChild(li);
 
+            $(".taskcheckbox").unbind().click(function () {
+                var index = $(this).index(".taskcheckbox");
+                console.log(index);
+                console.log(tasksList);
+                // console.log(tasksList[index]);
+                tasksList[index].checked = $(this).prop("checked");
+                // console.log(tasksList[index]);
+            })
             }
     }
-
-
+    function getCheckedCount() {
         var obj = $("ul").find(':checkbox');
         var checkedCount =  obj.filter(':checked').length;
-        console.log(checkedCount);
-
-
-        $('#removeDoneTask').click(function () {
-            if (!($.isEmptyObject(checkedList)) ){
-                for (let k in checkedList){
-                    if(checkedList[k]){
-                        var div = this.parentElement;
-                        div.style.display = "none";
-                        removeItem(k);
-                        $(".check1").eq(k).remove();
-                    }
-                }
-            }
-        });
-        // for remove finished button
-                    // div.style.display = "none";
-                    // removeItem(index);
-                    // $(".check1").eq(index).remove();
-
-        function removeItem(itemIndex) {
-            console.log("removeitem");
-            chrome.storage.sync.get(['list1'], function (val) {
-                tasksList = val.list1;
-                tasksList.splice(itemIndex, 1);
-                console.log("new list", tasksList);
-
-                chrome.storage.sync.set({
-                    'list1': tasksList
-                })
-
-            })
-
-        }
-
-
-        function setDate() {
-            var todayDate = new Date();
-            console.log(todayDate);
-            var locale = "en-us";
-            var month = todayDate.toLocaleString(locale, {month: "long"});
-            var day = todayDate.toLocaleString(locale, {weekday: "long"});
-
-            document.getElementById('date').innerHTML = "Task checklist for " + day + ", " + todayDate.getDate() + " "
-                + month;
-        }
+        return checkedCount;
     }
 
-)
+    $('#removeDoneTask').click(function () {
+        for (let k in tasksList){
+            console.log(tasksList[parseInt(k)].checked);
+            if(tasksList[parseInt(k)].checked == true){
+                tasksList.splice(parseInt(k),1);
+                chrome.storage.sync.set({
+                    'list': tasksList
+                })
+                console.log("new tasklist afterbeing spliced and stored:"+tasksList);
+                document.getElementById("todo-listUl").innerHTML = "";
+                for (var i = 0; i < tasksList.length; i++) {
+                    addUI(document.getElementById("todo-listUl"),tasksList[i]);
+                }
+            }
+        }
+    });
+ 
+
+    //     function setDate() {
+    //         var todayDate = new Date();
+    //         console.log(todayDate);
+    //         var locale = "en-us";
+    //         var month = todayDate.toLocaleString(locale, {month: "long"});
+    //         var day = todayDate.toLocaleString(locale, {weekday: "long"});
+
+    //         document.getElementById('date').innerHTML = "Task checklist for " + day + ", " + todayDate.getDate() + " "
+    //             + month;
+    //     }
+        
+    //     function updateProgressBar(progressBar, value){
+    //         value = Math.round(value);
+    //         progressBar.querySelector(".progress-fill").style.width = `${value}%`;
+    //         progressBar.querySelector(".progress-text").textContent = `${value}%`;
+    //     }
+        
+        // const myProgressBar = document.querySelector(".progress");
+        
+        // updateProgressBar(myProgressBar, 72);   //how to update progressbar example number
+        // console.log(tasksList);
+        // console.log(tasksList.length);   // ???? does not work gives 0 for collection
+        // console.log(tasksList[0]);
+
+        // // var task = taskList[0].getElementsByTagName("input"); // ???? does not work  should have give first item on list
+
+        // // const task = taskList[0].getElementsByTagName("input")[0].checked;
+        // // console.log(task);
+
+
+        // function completion(){
+        // }
+    })
+
+

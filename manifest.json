@@ -9,18 +9,13 @@
       "48": "/image/48px - Extension Logo.png",
       "128": "/image/128px - Extension Logo.png"
     },
-    "page_action":{
-      "default_icon":{
-        "16": "/image/16px - Extension Logo.png",
-        "48": "/image/48px - Extension Logo.png",
-        "128": "/image/128px - Extension Logo.png"
-      }
-    },
-    "browser_action": {
-      "default_popup": "popup.html"
-    },
     "permissions": ["activeTab", "storage"],
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon":{
+            "16": "/image/16px - Extension Logo.png",
+            "48": "/image/48px - Extension Logo.png",
+            "128": "/image/128px - Extension Logo.png"
+          }
       }
   }
