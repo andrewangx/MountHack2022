@@ -1,6 +1,6 @@
 $(function () {
     var tasksList = new Array();
-    var learnList = new Array();
+    var checkedList = {};
     chrome.storage.sync.get(['list1'], function (val) {
         if (val.list1.length > 0)
             tasksList = val.list1;
@@ -9,7 +9,6 @@ $(function () {
         for (var i = 0; i < tasksList.length; i++) {
             addListItem(tasksList[i]);
         }
-
 
     })
 
@@ -36,7 +35,7 @@ $(function () {
         document.getElementById("taskInput").value = "";
         var ul = document.getElementById("todo-listUl");
 
-        addUI(ul, value, 1)
+        addUI(ul, value)
     }
 
 
@@ -53,36 +52,51 @@ $(function () {
         } else {
             
             var span = document.createElement("SPAN");
-            // var txt = document.createTextNode("\u00D7");
+            span.className = "check1";
             var checkbox = document.createElement('input');
             checkbox.type = "checkbox";
             checkbox.name = "name";
-            checkbox.checked = 0;
+            checkbox.yes = false;
+            checkbox.checked = false;
             checkbox.id = "id";
     
-                span.className = "check1";
-                // span.appendChild(checkbox);
-                li.appendChild(checkbox);
-                li.appendChild(span);
-    
-                // $(".check1").click(function () {
-                //     var index = $(this).index(".check1");
-                //     console.log(index);
-                //     var div = this.parentElement;
-                //     div.style.setProperty("text-decoration","line-through")
-                    
-                // })
-                $("li").on("click", "li", function(){
-                    $(this).wrap("<strike>");
-                });
-                ul.appendChild(li);
-        }
+            span.appendChild(checkbox);
+            // li.appendChild(checkbox);
+            li.appendChild(span);
+            $(".check1").unbind().click(function () {
+                var index = $(this).index(".check1");
+                
+                $(this).find(':checkbox').prop('yes', !($(this).find(':checkbox').prop('yes')) );
+                if($(this).find(':checkbox').prop('yes')){
+                    checkedList[index] = true;
+                } else{
+                    checkedList[index] = false;
+                }
+                // console.log(checkedList);
 
-        }
+            })
+            ul.appendChild(li);
 
-        $('#addButtonTask').click(function () {
-            
-    
+            }
+    }
+
+
+        var obj = $("ul").find(':checkbox');
+        var checkedCount =  obj.filter(':checked').length;
+        console.log(checkedCount);
+
+
+        $('#removeDoneTask').click(function () {
+            if (!($.isEmptyObject(checkedList)) ){
+                for (let k in checkedList){
+                    if(checkedList[k]){
+                        var div = this.parentElement;
+                        div.style.display = "none";
+                        removeItem(k);
+                        $(".check1").eq(k).remove();
+                    }
+                }
+            }
         });
         // for remove finished button
                     // div.style.display = "none";

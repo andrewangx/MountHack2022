@@ -1,6 +1,8 @@
-/* .running-man{
-
-} */
+.running-man{
+    position: relative;
+    left: 0px;
+    bottom: -65px;
+}
 
 
 .mountain{
