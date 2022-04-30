@@ -144,23 +144,23 @@ $(function () {
 
 
 
-function countItems(){
+// function countItems(){
 
-    for (let k in checkedList){
-        let item = checkedList[k] 
-        // if(checkedList[k]){
-            var div = this.parentElement;
-            // div.style.display = "none";
-            removeItem(k);
-            let checkBox = $(".check1").eq(k).children("input");
-                console.log(checkBox.get(0));
-                console.log(checkBox.prop("checked"));
-                if(checkBox.prop("checked")){
-                    let listItem = checkBox.parent().parent();
-                    listItem.remove();
-                }
+//     for (let k in checkedList){
+//         let item = checkedList[k] 
+//         // if(checkedList[k]){
+//             var div = this.parentElement;
+//             // div.style.display = "none";
+//             removeItem(k);
+//             let checkBox = $(".check1").eq(k).children("input");
+//                 console.log(checkBox.get(0));
+//                 console.log(checkBox.prop("checked"));
+//                 if(checkBox.prop("checked")){
+//                     let listItem = checkBox.parent().parent();
+//                     listItem.remove();
+//                 }
         
 
-        console.log(k);
-    }
-}
+//         console.log(k);
+//     }
+// }
